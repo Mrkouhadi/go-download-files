@@ -5,15 +5,18 @@ import (
 )
 
 func main() {
-	// serving a list files
-	handleTest := http.StripPrefix("/allfiles/", http.FileServer(http.Dir("static")))
-	http.Handle("/allfiles/", handleTest)
+	// serving a list files in static directory
+	serveAllfilesInstaticDir := http.StripPrefix("/", http.FileServer(http.Dir("static")))
+	http.Handle("/", serveAllfilesInstaticDir)
 
-	// ability to download that pdf file from: "http://localhost:8080/files"
-	http.HandleFunc("/downloadfile", downloadPDFFromFS)
+	// serve a single pdf file : ./static/pdf-2.pdf
+	http.HandleFunc("/pdf", servePDF)
 
-	// aility to download a pdf file from different link
-	http.HandleFunc("/downloadfilefromotherlink", downloadPDFOtherLink)
+	// ability to download that pdf file from static directory
+	http.HandleFunc("/download-file-from-fs", downloadPDFFromFS)
+
+	// aility to download a pdf file from a url
+	http.HandleFunc("/download-file-from-url", downloadfilefromurl)
 
 	// server on port:8080
 	panic(http.ListenAndServe(":8080", nil))
